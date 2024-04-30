@@ -35,7 +35,7 @@ const handleSubmit = (e) => {
   margin: 0;
  }
  input.search {
-  border: 1px solid #d3d3de;
+  border: 1px solid var(--color-gray-d2);
   border-radius: 0.62rem;
   padding: 1rem 1.5rem;
   
@@ -44,7 +44,7 @@ const handleSubmit = (e) => {
   font-weight: 400;
   font-size: 1rem;
   line-height: 130%;
-  color: #55555c;
+  color: var(--color-gray-d4);
  }
  </style>
  

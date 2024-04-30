@@ -182,7 +182,7 @@ function nextPage() {
           >
             <path
               d="M15 18L9 11.9947L15 6"
-              stroke="#55555C"
+              stroke="var(--color-gray-d4)"
               stroke-width="1.5"
               stroke-miterlimit="10"
             />
@@ -237,7 +237,7 @@ function nextPage() {
           >
             <path
               d="M9 18L15 11.9947L9 6"
-              stroke="#55555C"
+              stroke="var(--color-gray-d4)"
               stroke-width="1.5"
               stroke-miterlimit="10"
             />
@@ -295,13 +295,13 @@ section.container {
   gap: 1rem;
 }
 .select-page {
-  border: 1px solid #d3d3de;
+  border: 1px solid var(--color-gray-d2);
   border-radius: 0.5rem;
   padding: 0.38rem 0.62rem 0.38rem 1rem;
   font-weight: 400;
   font-size: 0.75rem;
   line-height: 130%;
-  color: #0e0e10;
+  color: var(--color-base-black);
 }
 .pagination-page-numbers {
   display: flex;
@@ -325,17 +325,17 @@ section.container {
   font-weight: 400;
   font-size: 0.75rem;
   line-height: 130%;
-  color: #0e0e10;
+  color: var(--color-base-black);
   &:hover {
-    background: #f1f4fd;
+    background: var(--color-base-white);
   }
 }
 
 .pagination-page-numbers button.active {
-  background: #f0f0f7;
+  background: var(--color-gray-d1);
 }
 .pagination-button {
-  border: 1px solid #d3d3de;
+  border: 1px solid var(--color-gray-d2);
   border-radius: 0.5rem;
   padding: 0.38rem 0.62rem;
 
@@ -343,25 +343,25 @@ section.container {
   transition: background 0.2s;
 }
 .pagination-button[disabled] {
-  border: 1px solid #d3d3de;
+  border: 1px solid var(--color-gray-d2);
   border-radius: 0.5rem;
   padding: 0.38rem 0.62rem;
 }
 .pagination-button:not([disabled]):hover {
-  background: #f1f4fd;
+  background: var(--color-base-white);
 }
 form#search {
   margin: 0;
 }
 input.search {
-  border: 1px solid #d3d3de;
+  border: 1px solid var(--color-gray-d2);
   border-radius: 0.62rem;
   padding: 1rem 1.5rem;
   &[placeholder] {
     font-weight: 400;
     font-size: 1rem;
     line-height: 130%;
-    color: #55555c;
+    color: var(--color-gray-d4);
   }
 }
 </style>

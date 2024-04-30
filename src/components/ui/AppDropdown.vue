@@ -62,7 +62,7 @@ watch(value, (newValue) => {
        <button :id="`${props.name}-button-label`" @click="toggleDropdown($event)" type="button" aria-haspopup="listbox" class="dropdown__button" :class="{'dropdown__button--active': !dropdownHidden, 'dropdown__button--number': props.type === 'number'}">
          {{ value ? value : props.emptyOptionLabel }}
          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-           <path d="M6.00012 9L12.0054 15L18.0001 9" stroke="#55555C" stroke-width="1.5" stroke-miterlimit="10"/>
+           <path d="M6.00012 9L12.0054 15L18.0001 9" stroke="var(--color-gray-d4)" stroke-width="1.5" stroke-miterlimit="10"/>
          </svg>
        </button>
        <ul v-show="!dropdownHidden" :aria-labelledby="`${props.name}-label`" tabindex="-1" role="listbox" class="dropdown__list" ref="dropdownList">
@@ -91,7 +91,7 @@ watch(value, (newValue) => {
     font-weight: 400;
     font-size: 0.75rem;
     line-height: 130%;
-    color: #687588;
+    color: var(--color-grayscale-600);
   }
   .dropdown {
     width: 100%;
@@ -124,7 +124,7 @@ watch(value, (newValue) => {
     background: #bde4ff;
   }
   &:hover {
-    background: #d3d3de;
+    background: var(--color-gray-d2);
   }
   &.dropdown__option--number {
     width: 4.56rem;
@@ -140,7 +140,7 @@ button {
   width: 100%;
   padding: 1rem 1.5rem;
   background-color: transparent;
-  border: 1px solid #d3d3de;
+  border: 1px solid var(--color-gray-d2);
   border-radius: 0.62rem;
   gap: 0.62rem;
   font-size: 16px;
@@ -183,7 +183,7 @@ button {
   border-radius: 0.75rem;
   padding: 0.38rem;
   box-shadow: 0 5px 40px 0 rgba(0, 0, 0, 0.1);
-  background: #f1f4fd;
+  background: var(--color-base-white);
 }
 
 .dropdown__list--top {

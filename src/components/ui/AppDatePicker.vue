@@ -40,7 +40,7 @@ input.date-picker{
     font-weight: 400;
     font-size: 1rem;
     line-height: 130%;
-    color: #55555c;
+    color: var(--color-gray-d4);
  }
 }
 </style>

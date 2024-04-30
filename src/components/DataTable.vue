@@ -102,7 +102,7 @@ function capitalize(str) {
                     ? 'M12.6666 6L8.66309 2L4.66663 6'
                     : 'M12.6666 6L8.66309 2L4.66663 6'
                 "
-                :stroke="sortOrders[key] > 0 ? '#93939B' : '#0E0E10'"
+                :stroke="sortOrders[key] > 0 ? 'var(--color-gray-d3)' : 'var(--color-base-black)'"
                 stroke-width="1.5"
                 stroke-miterlimit="10"
               />
@@ -112,7 +112,7 @@ function capitalize(str) {
                     ? 'M12.6666 10L8.67016 14L4.66663 10'
                     : 'M12.6666 10L8.67016 14L4.66663 10'
                 "
-                :stroke="sortOrders[key] > 0 ? '#0E0E10' : '#93939B'"
+                :stroke="sortOrders[key] > 0 ? 'var(--color-base-black)' : 'var(--color-gray-d3)'"
                 stroke-width="1.5"
                 stroke-miterlimit="10"
               />
@@ -161,7 +161,7 @@ table {
 }
 
 th {
-  background-color: #f0f0f7;
+  background-color: var(--color-gray-d1);
   color: rgba(255, 255, 255, 0.66);
   cursor: pointer;
   user-select: none;
@@ -170,7 +170,7 @@ th {
     font-weight: 700;
     font-size: 1rem;
     line-height: 130%;
-    color: #55555c;
+    color: var(--color-gray-d4);
   }
   span{
     display: flex;
@@ -188,14 +188,14 @@ tr {
   background-color: #fff;
 }
 tr:hover {
-  background-color: #f1f4fd;
+  background-color: var(--color-base-white);
 }
 td {
-  border-bottom: 0.06rem solid #d3d3de;
+  border-bottom: 0.06rem solid var(--color-gray-d2);
   font-weight: 400;
   font-size: 0.88rem;
   line-height: 130%;
-  color: #0e0e10;
+  color: var(--color-base-black);
 }
 
 th,
@@ -205,7 +205,7 @@ td {
 }
 
 th.active {
-  color: #0e0e10;
+  color: var(--color-base-black);
 }
 
 th.active .arrow {
@@ -224,13 +224,13 @@ th.active .arrow {
 .arrow.asc {
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
-  border-bottom: 4px solid #93939b;
+  border-bottom: 4px solid var(--color-gray-d3);
 }
 
 .arrow.dsc {
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
-  border-top: 4px solid #0e0e10;
+  border-top: 4px solid var(--color-base-black);
 }
 
 .tag-container {
@@ -255,7 +255,7 @@ th.active .arrow {
   gap: 0.5rem;
   font-size: 1rem;
   line-height: 130%;
-  color: #0e0e10;
+  color: var(--color-base-black);
 }
 .loader {
   border: 3px solid #f3f3f3;
