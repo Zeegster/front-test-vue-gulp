@@ -33,18 +33,17 @@ const handleSubmit = (e) => {
  <style>
  form#search {
   margin: 0;
- }
- input.search {
+}
+input.search {
   border: 1px solid var(--color-gray-d2);
   border-radius: 0.62rem;
   padding: 1rem 1.5rem;
-  
- }
- input.search::placeholder {
-  font-weight: 400;
-  font-size: 1rem;
-  line-height: 130%;
-  color: var(--color-gray-d4);
- }
+  &[placeholder] {
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 130%;
+    color: var(--color-gray-d4);
+  }
+}
  </style>
  

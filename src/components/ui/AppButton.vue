@@ -49,6 +49,7 @@ const props = defineProps({
   text-align: center;
   white-space: nowrap;
   transition: all 0.2s;
+  cursor: pointer;
 }
 
 .button .UI-documents-doc {

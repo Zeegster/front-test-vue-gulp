@@ -132,7 +132,10 @@ watch(value, (newValue) => {
   }
 }
 
-button {
+.dropdown__button {
+  font-size: 1rem;
+  text-align: center;
+  position: relative;
   position: relative;
   display: flex;
   align-items: center;
@@ -148,12 +151,6 @@ button {
   &[aria-disabled='true'] {
     opacity: 0.5;
   }
-}
-
-.dropdown__button {
-  font-size: 1rem;
-  text-align: center;
-  position: relative;
 
   svg {
     position: relative;

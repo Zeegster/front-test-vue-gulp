@@ -42,7 +42,6 @@ const filteredData = computed(() => {
             return String(item).toLowerCase().indexOf(filterKey) > -1;
           });
         }
-        // Otherwise, check the value directly
         return String(value).toLowerCase().indexOf(filterKey) > -1;
       });
     });
@@ -60,7 +59,6 @@ const filteredData = computed(() => {
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')
         .toLowerCase();
-      console.log('Comparing:', aValue, 'and', bValue);
 
       return (
         (aValue === bValue ? 0 : aValue > bValue ? 1 : -1) *
