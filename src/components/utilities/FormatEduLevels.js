@@ -15,5 +15,5 @@ const educationLevels = {
 };
 
 export default function abbreviateEducationLevel(level) {
-  return educationLevels[level] || level; // Возвращаем сокращение, если оно есть, иначе возвращаем исходное значение
+  return educationLevels[level] || level; 
 }

@@ -34,9 +34,9 @@ const filteredData = computed(() => {
   if (filterKey) {
     filterKey = filterKey.toLowerCase();
     data = data.filter((row) => {
-      // Check if the filterKey matches any value in the row
+      
       return Object.values(row).some((value) => {
-        // If the value is an array, check each item in the array
+        
         if (Array.isArray(value)) {
           return value.some((item) => {
             return String(item).toLowerCase().indexOf(filterKey) > -1;
@@ -84,9 +84,11 @@ function capitalize(str) {
           v-for="key in columns"
           @click="sortBy(key)"
           :class="{ active: sortKey.value === key }"
-        >
+        ><span>
+         <h2>
           {{ capitalize(key) }}
-          <span>
+         </h2> 
+          
             <svg
               width="17"
               height="16"
@@ -163,10 +165,23 @@ th {
   color: rgba(255, 255, 255, 0.66);
   cursor: pointer;
   user-select: none;
-  font-weight: 700;
-  font-size: 1rem;
-  line-height: 130%;
-  color: #55555c;
+  h2{
+
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 130%;
+    color: #55555c;
+  }
+  span{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+    svg{
+      margin-top: auto;
+      margin-bottom: auto;
+    }
+  }
 }
 
 tr {

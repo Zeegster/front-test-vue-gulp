@@ -1,6 +1,6 @@
 <script setup>
-import DataTable from './components/DataTable.vue';
 import { ref, onMounted, watch, computed, provide } from 'vue';
+import DataTable from './components/DataTable.vue';
 import InputSearch from './components/ui/InputSearch.vue';
 import abbreviateInstitutionName from './components/utilities/FormatName';
 import BaseButton from './components/ui/AppButton.vue';
@@ -12,27 +12,22 @@ import AppDatePicker from './components/ui/AppDatePicker.vue';
 const API = 'https://schooldb.skillline.ru/api/schools';
 const itemsSchools = ref([]);
 const searchQuery = ref('');
-const currentPage = ref(1); // Start on the first page
-const totalPages = ref(0); // Initialize total pages to 0
-const itemsPerPageOptions = [10, 20, 30, 40, 50]; // Options for items per page
-const itemsPerPage = ref(itemsPerPageOptions[0]); // Default items per page
-const educationLevels = ref([]);
+const currentPage = ref(1);
+const totalPages = ref(0);
+const itemsPerPageOptions = [10, 20, 30, 40, 50];
+const itemsPerPage = ref(itemsPerPageOptions[0]);
 const statuses = ref([]);
 const selectedStatus = ref([]);
-const selectedEducationLevel = ref(''); // Инициализируем переменную выбранного уровня образования
 const openDropdown = ref(null);
 
-// Предоставление этого свойства для доступа из дочерних компонентов
 provide('openDropdown', openDropdown);
-// Function to fetch schools data with pagination and items per page
+
 async function fetchSchools(page) {
   try {
     const response = await fetch(
       `${API}?page=${page}&count=${itemsPerPage.value}`
     );
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const data = await response.json();
     itemsSchools.value = data.data.list.map((school) => ({
       region: school.edu_org.region.name,
@@ -43,144 +38,75 @@ async function fetchSchools(page) {
         new Set(
           school.supplements
             .flatMap((supplement) =>
-              supplement.educational_programs.map((program) => {
-                if (
-                  program.edu_level.name !== null &&
-                  program.edu_level.name !== 'Не определен'
-                ) {
-                  return abbreviateEducationLevel(program.edu_level.name);
-                } else {
-                  return null;
-                }
-              })
+              supplement.educational_programs.map((program) =>
+                program.edu_level.name !== null &&
+                program.edu_level.name !== 'Не определен'
+                  ? abbreviateEducationLevel(program.edu_level.name)
+                  : null
+              )
             )
             .filter((level) => level !== null)
         )
-      ), 
+      ),
     }));
-
     totalPages.value = Math.ceil(data.data.pages_count);
-    console.log(data.data);// Calculate total pages
-
     statuses.value = getStatus(data);
   } catch (err) {
     console.error('Failed to fetch schools:', err);
-    // Fallback mechanism: Try fetching with a smaller count value
     if (itemsPerPage.value > 10) {
-      itemsPerPage.value -= 10; // Уменьшаем количество элементов на странице
-      await fetchSchools(currentPage.value); // Повторяем запрос с меньшим количеством данных
-    } else if (currentPage.value > 1) {
-      currentPage.value--; // Переходим на предыдущую страницу
+      itemsPerPage.value -= 10;
       await fetchSchools(currentPage.value);
-      // Повторяем запрос на предыдущей странице
+    } else if (currentPage.value > 1) {
+      currentPage.value--;
+      await fetchSchools(currentPage.value);
     } else {
       console.error('Fallback failed. Unable to fetch schools.');
-      // Обработка ошибки...
     }
   }
 }
 
 async function downloadSchoolsCSV() {
   try {
-    // Fetch data from the API with the download parameter set to true
     const response = await fetch(`${API}?download=true`);
-
-    // Check if the request was successful
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    // Get the Blob from the response
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const blob = await response.blob();
-
-    // Create a URL for the Blob
     const url = URL.createObjectURL(blob);
-
-    // Create a temporary link element
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'schools.csv'; // Set the file name for the download
-
-    // Append the link to the document body
+    link.download = 'schools.csv';
     document.body.appendChild(link);
-
-    // Programmatically click the link to start the download
     link.click();
-
-    // Remove the link from the document
     document.body.removeChild(link);
   } catch (error) {
     console.error('Failed to download schools data:', error);
-    // Handle the error as needed
   }
 }
 
 function getStatus(data) {
-  const statuses = new Set(); // Используем Set для уникальности уровней образования
-
-  // Проверяем, что data.data.list существует и является массивом
+  const statuses = new Set();
   if (Array.isArray(data.data.list)) {
     data.data.list.forEach((item) => {
-      // Проверяем, что educational_programs существует и является массивом
       if (item && Array.isArray(item.supplements)) {
         item.supplements.forEach((supplement) => {
-          // Проверяем, что educational_programs существует и является массивом
-          
-              if (
-                supplement.status &&
-                supplement.status.name !== null
-              ) {
-                statuses.add(supplement.status.name);
-              }
-            
-          
-        });
-      }
-    });
-  }
-
-  return Array.from(statuses); // Преобразуем Set обратно в массив
-}
-function getEducationLevels(data) {
-  const educationLevels = new Set(); // Используем Set для уникальности уровней образования
-
-  // Проверяем, что data.data.list существует и является массивом
-  if (Array.isArray(data.data.list)) {
-    data.data.list.forEach((item) => {
-      // Проверяем, что educational_programs существует и является массивом
-      if (item && Array.isArray(item.supplements)) {
-        item.supplements.forEach((supplement) => {
-          // Проверяем, что educational_programs существует и является массивом
-          if (supplement && Array.isArray(supplement.educational_programs)) {
-            supplement.educational_programs.forEach((program) => {
-              if (
-                program.edu_level &&
-                program.edu_level.name !== 'Не определен' &&
-                program.edu_level.name !== null
-              ) {
-                educationLevels.add(program.edu_level.name);
-                console.log(educationLevels);
-              }
-            });
+          if (supplement.status && supplement.status.name !== null) {
+            statuses.add(supplement.status.name);
           }
         });
       }
     });
   }
-
-  return Array.from(educationLevels); // Преобразуем Set обратно в массив
+  return Array.from(statuses);
 }
+
 const filteredItemsSchools = computed(() => {
-  if (!selectedStatus.value) {
-    return itemsSchools.value;
-  }
+  if (!selectedStatus.value) return itemsSchools.value;
   return itemsSchools.value.filter((school) =>
     school.status.includes(selectedStatus.value)
   );
 });
 
-// Fetch schools data on component mount and when the page or items per page changes
 onMounted(() => fetchSchools(currentPage.value));
+
 watch([currentPage, itemsPerPage], () => fetchSchools(currentPage.value));
 
 const gridColumns = ['Регионы', 'Название', 'Адрес', 'Уровень образования'];
@@ -192,18 +118,13 @@ const visiblePageNumbers = computed(() => {
     (_, i) => startPage + i
   );
 });
-// Function to navigate to the previous page
+
 function previousPage() {
-  if (currentPage.value > 1) {
-    currentPage.value--;
-  }
+  if (currentPage.value > 1) currentPage.value--;
 }
 
-// Function to navigate to the next page
 function nextPage() {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value++;
-  }
+  if (currentPage.value < totalPages.value) currentPage.value++;
 }
 </script>
 
@@ -222,7 +143,7 @@ function nextPage() {
       </div>
     </div>
     <div class="row-full">
-      <AppDatePicker v-model="date" />
+      <AppDatePicker />
       <AppDropdown
         :id="`organization-types`"
         :options="statuses"
