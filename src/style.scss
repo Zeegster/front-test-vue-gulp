@@ -1,0 +1,13 @@
+@import './scss/fonts';
+@import './scss/variables';
+
+*{
+  box-sizing: border-box;
+  font-family: 'Gotham Pro', sans-serif;
+}
+
+body{
+  background: #f1f4fd;
+  padding: 3rem;
+  
+}
