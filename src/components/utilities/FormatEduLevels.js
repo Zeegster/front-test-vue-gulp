@@ -14,6 +14,6 @@ const educationLevels = {
   'Высшее образование - магистратура': 'Магистратура',
 };
 
-export default function abbreviateEducationLevel(level) {
+export default function formatEducationLevel(level) {
   return educationLevels[level] || level; 
 }
