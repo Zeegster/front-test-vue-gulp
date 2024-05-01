@@ -6,9 +6,8 @@ const selectedDateRange = ref(['', '']);
 const showCalendar = ref(false);
 const currentMonth = ref(new Date().getMonth());
 const currentYear = ref(new Date().getFullYear());
-
-const minDate = new Date();
-const maxDate = new Date();
+const minDate = new Date(currentYear.value, currentMonth.value, 1);
+const maxDate = new Date(currentYear.value, currentMonth.value + 1, 0);
 maxDate.setMonth(maxDate.getMonth() + 1);
 
 const calendarWeeks = computed(() => {
@@ -28,9 +27,9 @@ const calendarWeeks = computed(() => {
   return weeks;
 });
 const getMonthName = (month, locale = 'ru-RU') => {
-  return new Date(0, month, 1).toLocaleString('ru-RU', { month: 'long' }).split(' ')[0];
+  const monthName = new Date(0, month, 1).toLocaleString(locale, { month: 'long' }).split(' ')[0];
+  return monthName.charAt(0).toUpperCase() + monthName.slice(1);
 };
-
 const prevMonth = () => {
   if (currentMonth.value === 0) {
     currentMonth.value = 11;
@@ -78,7 +77,9 @@ const isSelected = (date) => {
 };
 
 const isAvailable = (date) => {
-  return date >= minDate && date <= maxDate;
+  const startDate = new Date(currentYear.value, currentMonth.value, 1);
+  const endDate = new Date(currentYear.value, currentMonth.value + 1, 0);
+  return date >= startDate && date <= endDate;
 };
 
 const isDisabled = (date) => {
@@ -90,11 +91,16 @@ const selectDate = (date) => {
     if (selectedDateRange.value[0] === '') {
       selectedDateRange.value[0] = formatDate(date);
     } else if (selectedDateRange.value[1] === '') {
-      selectedDateRange.value[1] = formatDate(date);
+      if (new Date(selectedDateRange.value[0]) > date) {
+        const temp = selectedDateRange.value[0];
+        selectedDateRange.value[0] = formatDate(date);
+        selectedDateRange.value[1] = temp;
+      } else {
+        selectedDateRange.value[1] = formatDate(date);
+      }
     } else {
-      selectedDateRange.value = [formatDate(date), ''];
+      selectedDateRange.value = ['', ''];
     }
-    showCalendar.value = false;
   }
 };
 
@@ -113,6 +119,17 @@ const updateSelectedDateRange = () => {
     selectedDateRange.value[1] = selectedDateRange.value[0];
   }
 };
+
+const closeCalendar = () => {
+  showCalendar.value = false;
+};
+
+const saveAndClose = () => {
+
+  closeCalendar();
+};
+
+
 </script>
 
 <template>
@@ -204,8 +221,8 @@ const updateSelectedDateRange = () => {
        <tfoot>
          <tr class="calendar-footer">
            <td colspan="7">
-             <AppButton text="Отмена" property="secondary" />
-             <AppButton text="Сохранить" />
+            <AppButton text="Отмена" property="secondary" @click="closeCalendar" />
+             <AppButton text="Сохранить" @click="saveAndClose" />
            </td>
          </tr>
        </tfoot>
