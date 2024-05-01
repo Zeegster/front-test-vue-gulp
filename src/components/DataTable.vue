@@ -130,12 +130,15 @@ function capitalize(str) {
         <td>{{ entry.region }}</td>
         <td>{{ entry.name }}</td>
         <td>{{ entry.address }}</td>
-        <td class="tag-container">
-          <span
-            class="tag"
-            v-for="entries in entry.educationLevel"
-            >{{ entries }}</span
-          >
+        <td >
+          <div class="tag-container">
+
+            <span
+              class="tag"
+              v-for="entries in entry.educationLevel"
+              >{{ entries }}</span
+            >
+          </div>
         </td>
       </tr>
     </tbody>
