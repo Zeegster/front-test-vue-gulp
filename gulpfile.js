@@ -64,7 +64,7 @@ gulp.task('fonts:dev', function () {
 });
 
 gulp.task('vue', function buildVue() {
- return gulp
+  return gulp
     .src('./src/main.js')
     .pipe(plumber(plumberNotify('VUE')))
     .pipe(
@@ -79,6 +79,10 @@ gulp.task('vue', function buildVue() {
             {
               test: /\.css$/,
               use: ['vue-style-loader', 'css-loader'],
+            },
+            {
+              test: /\.scss$/,
+              use: ['vue-style-loader', 'css-loader', 'sass-loader'],
             },
           ],
         },
