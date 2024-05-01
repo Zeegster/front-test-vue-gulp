@@ -28,7 +28,7 @@ const calendarWeeks = computed(() => {
   return weeks;
 });
 const getMonthName = (month, locale = 'ru-RU') => {
-  return new Date(0, month, 1).toLocaleString('en-US', { month: 'long' }).split(' ')[0];
+  return new Date(0, month, 1).toLocaleString('ru-RU', { month: 'long' }).split(' ')[0];
 };
 
 const prevMonth = () => {
@@ -120,11 +120,11 @@ const updateSelectedDateRange = () => {
     <input
       type="text"
       class="calendar-input"
-      :value="selectedDateRange[0]? `${selectedDateRange[0]} - ${selectedDateRange[1]}` : 'Даты'"
+      :value="selectedDateRange[0]? `${selectedDateRange[0]} - ${selectedDateRange[1]}` : 'Выберите период'"
       @focus="showCalendar = true"
       @blur="updateSelectedDateRange"
     />
-     <table class="calendar" v-if="!showCalendar">
+     <table class="calendar" v-if="showCalendar">
        <thead>
          <tr>
            <th colspan="7" class="calendar-header">Выберите период</th>
