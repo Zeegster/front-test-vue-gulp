@@ -21,7 +21,11 @@ function getDataKey(columnKey) {
 }
 
 function updateSortOrder(key) {
-  sortOrders.value[key] *= -1;
+  if (sortOrders.value[key] === 1) {
+    sortOrders.value[key] = -1;
+  } else {
+    sortOrders.value[key] = 1;
+  }
 }
 
 function sortBy(key) {
@@ -75,13 +79,15 @@ function capitalize(str) {
 </script>
 
 <template>
-  <table v-if="filteredData.length">
+  <table 
+  class="data-table"
+  v-if="filteredData.length">
     <thead>
       <tr>
         <th
           v-for="key in columns"
           @click="sortBy(key)"
-          :class="{ active: sortKey.value === key }"
+          :class="{ active: sortKey.value === key, sorting: sortOrders[key] !== 1 }"
         ><span>
          <h2>
           {{ capitalize(key) }}
@@ -143,126 +149,132 @@ function capitalize(str) {
   <p v-else-if="!filteredData.length">No results</p>
 </template>
 
-<style>
-table,
-tr,
-th,
-td,
-tbody {
-  margin: 0;
-  padding: 0;
+<style lang="scss">
+
+table.data-table {
   border-spacing: 0;
-}
 
-table {
-  background-color: #fff;
-}
-
-th {
-  background-color: var(--color-gray-d1);
-  color: rgba(255, 255, 255, 0.66);
-  cursor: pointer;
-  user-select: none;
-  h2{
-
-    font-weight: 700;
-    font-size: 1rem;
-    line-height: 130%;
-    color: var(--color-gray-d4);
+  tr,
+  th,
+  td,
+  tbody {
+    margin: 0;
+    padding: 0;
+    border-spacing: 0;
   }
-  span{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    
-    svg{
-      margin-top: auto;
-      margin-bottom: auto;
+  
+  table {
+    background-color: #fff;
+  }
+  
+  th {
+    background-color: var(--color-gray-d1);
+    color: rgba(255, 255, 255, 0.66);
+    cursor: pointer;
+    user-select: none;
+    h2{
+  
+      font-weight: 700;
+      font-size: 1rem;
+      line-height: 130%;
+      color: var(--color-gray-d4);
+    }
+    span{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      
+      svg{
+        margin-top: auto;
+        margin-bottom: auto;
+      }
     }
   }
-}
-
-tr {
-  background-color: #fff;
-}
-tr:hover {
-  background-color: var(--color-base-white);
-}
-td {
-  border-bottom: 0.06rem solid var(--color-gray-d2);
-  font-weight: 400;
-  font-size: 0.88rem;
-  line-height: 130%;
-  color: var(--color-base-black);
-}
-
-th,
-td {
-  padding: 1rem;
-  text-align: left;
-}
-
-th.active {
-  color: var(--color-base-black);
-}
-
-th.active .arrow {
-  opacity: 1;
-}
-
-.arrow {
-  display: inline-block;
-  vertical-align: middle;
-  width: 0;
-  height: 0;
-  margin-left: 5px;
-  opacity: 0.66;
-}
-
-.arrow.asc {
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-bottom: 4px solid var(--color-gray-d3);
-}
-
-.arrow.dsc {
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-top: 4px solid var(--color-base-black);
-}
-
-.tag-container {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-start;
-  flex-direction: row;
-  gap: 0.25rem;
-  .tag {
-    border: 1px solid rgba(14, 14, 16, 0.1);
-    border-radius: 0.5rem;
-    padding: 0.25rem 0.38rem;
+  
+  tr {
+    background-color: #fff;
   }
-}
-
-.loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
-  gap: 0.5rem;
-  font-size: 1rem;
-  line-height: 130%;
-  color: var(--color-base-black);
-}
-.loader {
-  border: 3px solid #f3f3f3;
-  border-radius: 50%;
-  border-top: 3px solid var(--color-corp);
-  width: 1.5rem;
-  height: 1.5rem;
-  -webkit-animation: spin 2s linear infinite; /* Safari */
-  animation: spin 2s linear infinite;
+  tr:hover {
+    background-color: var(--color-base-white);
+  }
+  td {
+    border-bottom: 0.06rem solid var(--color-gray-d2);
+    font-weight: 400;
+    font-size: 0.88rem;
+    line-height: 130%;
+    color: var(--color-base-black);
+  }
+  
+  th,
+  td {
+    padding: 1rem;
+    text-align: left;
+  }
+  
+  th.active {
+    color: var(--color-base-black);
+  }
+  th.sorting {
+    background-color: var(--color-gray-d2);
+  }
+  th.active .arrow {
+    opacity: 1;
+  }
+  
+  .arrow {
+    display: inline-block;
+    vertical-align: middle;
+    width: 0;
+    height: 0;
+    margin-left: 5px;
+    opacity: 0.66;
+  }
+  
+  .arrow.asc {
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 4px solid var(--color-gray-d3);
+  }
+  
+  .arrow.dsc {
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid var(--color-base-black);
+  }
+  
+  .tag-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row;
+    gap: 0.25rem;
+    .tag {
+      border: 1px solid rgba(14, 14, 16, 0.1);
+      border-radius: 0.5rem;
+      padding: 0.25rem 0.38rem;
+    }
+  }
+  
+  .loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    gap: 0.5rem;
+    font-size: 1rem;
+    line-height: 130%;
+    color: var(--color-base-black);
+  }
+  .loader {
+    border: 3px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 3px solid var(--color-corp);
+    width: 1.5rem;
+    height: 1.5rem;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+  }
 }
 @keyframes spin {
   0% {

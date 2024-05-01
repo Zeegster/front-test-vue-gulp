@@ -96,7 +96,7 @@ const visiblePageNumbers = computed(() => {
       </button>
       <button
         @click="goToPage(totalPages)"
-        :disabled="currentPage === totalPages"
+        :class="{ active: currentPage === totalPages }"
       >
         {{ totalPages }}
       </button>

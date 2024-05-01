@@ -2,81 +2,142 @@
 import { ref, watch, onMounted } from 'vue';
 
 const props = defineProps({
- id: String,
- label: String,
- options: Array,
- name: String,
- emptyOptionLabel: {
+  id: String,
+  label: String,
+  options: Array,
+  name: String,
+  emptyOptionLabel: {
     type: String,
     default: 'Choose a value',
- },
- showLabel: { type: Boolean, default: false },
- type: {
+  },
+  showLabel: { type: Boolean, default: false },
+  type: {
     type: String,
     default: 'default',
- },
+  },
 });
-
-const emit = defineEmits(['update']);
 
 const value = ref();
 const dropdownHidden = ref(true);
-
-onMounted(() => {
- if (props.type === 'number') {
-    value.value = props.options[0];
- }
-});
+const emit = defineEmits(['update']);
 
 const selectOption = (option) => {
- if (option === null) {
+  if (option === null) {
     resetSelection();
- } else {
+  } else {
     value.value = option;
     dropdownHidden.value = true;
- }
+  }
 };
 
 const toggleDropdown = (e) => {
- if (e.target.id === `${props.name}-button-label`) {
+  if (e.target.id === `${props.name}-button-label`) {
     dropdownHidden.value = !dropdownHidden.value;
- } else {
+  } else {
     dropdownHidden.value = true;
- }
+  }
 };
 
 const resetSelection = () => {
- value.value = null;
- dropdownHidden.value = true;
+  value.value = null;
+  dropdownHidden.value = true;
 };
 
+const handleKeydown = (e) => {
+  if ( e.key === ' ' || e.key === 'Enter') {
+    e.preventDefault(); 
+    selectOption(e.target.dataset.value)
+  }
+};
+
+onMounted(() => {
+  if (props.type === 'number') {
+    value.value = props.options[0];
+  }
+});
+
 watch(value, (newValue) => {
- emit('update', newValue);
+  emit('update', newValue);
 });
 </script>
 
 <template>
   <div class="dropdown-wrapper">
-     <label for="dropdown" class="dropdown-label" v-if="props.showLabel">{{ props.label }}</label>
-     <div id="dropdown" class="dropdown" :value="value" ref="dropdown" v-click-outside="toggleDropdown">
-       <button :id="`${props.name}-button-label`" @click="toggleDropdown($event)" type="button" aria-haspopup="listbox" class="dropdown__button" :class="{'dropdown__button--active': !dropdownHidden, 'dropdown__button--number': props.type === 'number'}">
-         {{ value ? value : props.emptyOptionLabel }}
-         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-           <path d="M6.00012 9L12.0054 15L18.0001 9" stroke="var(--color-gray-d4)" stroke-width="1.5" stroke-miterlimit="10"/>
-         </svg>
-       </button>
-       <ul v-show="!dropdownHidden" :aria-labelledby="`${props.name}-label`" tabindex="-1" role="listbox" class="dropdown__list" ref="dropdownList">
-         <li v-if="props.type !== 'number'" class="dropdown__option" :class="{ 'dropdown__option--number': props.type === 'number' }" role="option" @click="selectOption()">
-           {{props.label}}
-         </li>
-         <li v-for="(option, index) in props.options" :key="index" :data-value="option" class="dropdown__option" :class="{ 'dropdown__option--number': props.type === 'number' }" role="option" @click="selectOption(option)">
-           {{ option }}
-         </li>
-       </ul>
-     </div>
+    <label
+      for="dropdown"
+      class="dropdown-label"
+      v-if="props.showLabel"
+      >{{ props.label }}</label
+    >
+    <div
+      id="dropdown"
+      class="dropdown"
+      :value="value"
+      ref="dropdown"
+      v-click-outside="toggleDropdown"
+    >
+      <button
+        :id="`${props.name}-button-label`"
+        @click="toggleDropdown($event)"
+        type="button"
+        aria-haspopup="listbox"
+        class="dropdown__button"
+        :class="{
+          'dropdown__button--active': !dropdownHidden,
+          'dropdown__button--number': props.type === 'number',
+        }"
+      >
+        {{ value ? value : props.emptyOptionLabel }}
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M6.00012 9L12.0054 15L18.0001 9"
+            stroke="var(--color-gray-d4)"
+            stroke-width="1.5"
+            stroke-miterlimit="10"
+          />
+        </svg>
+      </button>
+      <ul
+        v-show="!dropdownHidden"
+        :aria-labelledby="`${props.name}-label`"
+        role="listbox"
+        class="dropdown__list"
+        ref="dropdownList"
+        @keydown="handleKeydown($event)"
+
+      >
+        <li
+          v-if="props.type !== 'number'"
+          tabindex="0"
+          class="dropdown__option"
+          :class="{ 'dropdown__option--number': props.type === 'number' }"
+          role="option"
+          @click="selectOption()"
+        >
+          {{ props.label }}
+        </li>
+        <li
+          v-for="(option, index) in props.options"
+          tabindex="0"
+          :key="index"
+          :data-value="option"
+          class="dropdown__option"
+          :class="{ 'dropdown__option--number': props.type === 'number' }"
+          role="option"
+          @click="selectOption(option)"
+        >
+          {{ option }}
+        </li>
+      </ul>
+    </div>
   </div>
- </template>
- 
+</template>
 
 <style>
 .dropdown-wrapper {
@@ -139,14 +200,13 @@ watch(value, (newValue) => {
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Adjust as needed */
+  justify-content: space-between; 
   width: 100%;
   padding: 1rem 1.5rem;
   background-color: transparent;
   border: 1px solid var(--color-gray-d2);
   border-radius: 0.62rem;
   gap: 0.62rem;
-  font-size: 16px;
   cursor: pointer;
   &[aria-disabled='true'] {
     opacity: 0.5;

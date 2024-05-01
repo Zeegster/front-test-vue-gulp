@@ -84,14 +84,15 @@ const props = defineProps({
 }
 .button.secondary {
   color: var(--color-base-black);
-  background-color: transparent;
+  background-color: var(--color-white);
   border: 1px solid var(--color-gray-d4);
 }
 .button.secondary:hover {
+  background-color: var(--color-base-white);
   border: 1px solid var(--color-base-black);
 }
 .button.secondary:focus {
-  background-color: var(--color-corp-focus);
+  background-color: var(--color-gray-d1);
   border: 1px solid var(--color-base-black);
 }
 </style>
