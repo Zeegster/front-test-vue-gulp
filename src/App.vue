@@ -1,16 +1,17 @@
 <script setup>
-import { ref, onMounted, watch, computed, provide } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import DataTable from './components/DataTable.vue';
 import InputSearch from './components/ui/InputSearch.vue';
 import abbreviateInstitutionName from './components/utilities/FormatName';
-import BaseButton from './components/ui/AppButton.vue';
+import AppButton from './components/ui/AppButton.vue';
 import AppDropdown from './components/ui/AppDropdown.vue';
 import formatAddress from './components/utilities/FormatAdress';
-import abbreviateEducationLevel from './components/utilities/FormatEduLevels';
 import AppDatePicker from './components/ui/AppDatePicker.vue';
 import AppPagination from './components/ui/AppPagination.vue';
+import formatEducationLevel from './components/utilities/FormatEduLevels';
+import { fetchSchools, getDataFromAPI } from './api/apiService'; 
+import AppError from './components/ui/AppError.vue';
 
-const API = 'https://schooldb.skillline.ru/api/schools';
 const itemsSchools = ref([]);
 const searchQuery = ref('');
 const currentPage = ref(1);
@@ -19,49 +20,8 @@ const itemsPerPageOptions = [10, 20, 30, 40, 50];
 const itemsPerPage = ref(itemsPerPageOptions[0]);
 const statuses = ref([]);
 const selectedStatus = ref([]);
-
-async function fetchSchools(page) {
-  try {
-    const response = await fetch(
-      `${API}?page=${page}&count=${itemsPerPage.value}`
-    );
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    const data = await response.json();
-    itemsSchools.value = data.data.list.map((school) => ({
-      region: school.edu_org.region.name,
-      name: abbreviateInstitutionName(school.edu_org.full_name),
-      address: formatAddress(school.edu_org.contact_info.post_address),
-      status: school.supplements[0].status.name,
-      educationLevel: Array.from(
-        new Set(
-          school.supplements
-            .flatMap((supplement) =>
-              supplement.educational_programs.map((program) =>
-                program.edu_level.name !== null &&
-                program.edu_level.name !== 'Не определен'
-                  ? abbreviateEducationLevel(program.edu_level.name)
-                  : null
-              )
-            )
-            .filter((level) => level !== null)
-        )
-      ),
-    }));
-    totalPages.value = Math.ceil(data.data.pages_count);
-    statuses.value = getStatus(data);
-  } catch (err) {
-    console.error('Failed to fetch schools:', err);
-    if (itemsPerPage.value > 10) {
-      itemsPerPage.value -= 10;
-      await fetchSchools(currentPage.value);
-    } else if (currentPage.value > 1) {
-      currentPage.value--;
-      await fetchSchools(currentPage.value);
-    } else {
-      console.error('Fallback failed. Unable to fetch schools.');
-    }
-  }
-}
+const gridColumns = ['Регионы', 'Название', 'Адрес', 'Уровень образования'];
+const isError = ref(false);
 
 async function downloadSchoolsCSV() {
   try {
@@ -80,21 +40,6 @@ async function downloadSchoolsCSV() {
   }
 }
 
-function getStatus(data) {
-  const statuses = new Set();
-  if (Array.isArray(data.data.list)) {
-    data.data.list.forEach((item) => {
-      if (item && Array.isArray(item.supplements)) {
-        item.supplements.forEach((supplement) => {
-          if (supplement.status && supplement.status.name !== null) {
-            statuses.add(supplement.status.name);
-          }
-        });
-      }
-    });
-  }
-  return Array.from(statuses);
-}
 
 const filteredItemsSchools = computed(() => {
   if (!selectedStatus.value) return itemsSchools.value;
@@ -103,22 +48,56 @@ const filteredItemsSchools = computed(() => {
   );
 });
 
-const gridColumns = ['Регионы', 'Название', 'Адрес', 'Уровень образования'];
 
 
-onMounted(() => fetchSchools(currentPage.value));
+onMounted(async () => {
+  const data = await fetchSchools(1, itemsPerPage.value);
+  const { fetchedData } = getDataFromAPI(data);
+  itemsSchools.value = fetchedData.items;
+  statuses.value = fetchedData.statuses;
+  totalPages.value = fetchedData.totalPages;
+  currentPage.value = 1; // Initialize currentPage to 1
 
-watch([currentPage, itemsPerPage], () => fetchSchools(currentPage.value));
+  watch([currentPage, itemsPerPage], async (newValues) => {
+  const page = newValues[0];
+  const count = newValues[1];
+  try {
+    const data = await fetchSchools(page, count);
+    const { fetchedData } = getDataFromAPI(data);
+    itemsSchools.value = fetchedData.items;
+    statuses.value = fetchedData.statuses;
+    totalPages.value = fetchedData.totalPages;
+    
+  } catch (err) {
+    console.error('Failed to fetch schools:', err);
+    isError.value = true;
+    if (page > totalPages.value) {
+      currentPage.value = totalPages.value;
+    } else if (page > 1) {
+      currentPage.value++;
+      setTimeout(() => {
+      
+      isError.value = false;
+      document.body.style.overflow = 'auto';
+
+    }, 3000);
+    }
+  }
+});
+});
+
+
 
 </script>
 
 <template>
+  <AppError v-if="isError" :onScreen="isError"/>
   <section class="container">
     <div class="row-full">
       <h1 class="page-title">Таблица учреждений</h1>
       <div class="row">
         <InputSearch @search="searchQuery = $event" />
-        <BaseButton
+        <AppButton
           @click="downloadSchoolsCSV"
           icon="true"
           text="Скачать"
@@ -172,7 +151,7 @@ watch([currentPage, itemsPerPage], () => fetchSchools(currentPage.value));
   </section>
 </template>
 
-<style>
+<style lang="scss">
 section.container {
   display: flex;
   align-items: flex-start;
