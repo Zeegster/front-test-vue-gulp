@@ -3,17 +3,14 @@ export default function formatAddress(address) {
     return 'Адрес не указан';
   }
 
-  // Remove leading comma and space
   address = address.replace(/^,\s*/, '');
 
   // Search for postal code
   const postalCodeMatch = address.match(/(\d{6})(?=[,\s.\d]|$)/);
   const postalCode = postalCodeMatch ? postalCodeMatch[1] : '';
 
-  // Remove postal code with following comma or period and whitespace
   const withoutIndex = address.replace(new RegExp(`${postalCode}[\\s,.]+`, 'g'), '');
 
-  // Split address into components using space as separator
   const components = withoutIndex.split(' ');
 
   let formattedAddress = '';
@@ -43,7 +40,6 @@ export default function formatAddress(address) {
 function removeDistrict(address) {
   let formattedAddress = '';
 
-  // Remove district name
   formattedAddress = address.replace(/(?:Россия|Российская Федерация|РФ)/g, '');
 
   return formattedAddress;

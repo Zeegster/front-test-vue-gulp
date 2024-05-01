@@ -11,8 +11,8 @@ export async function fetchSchools(page, count) {
     const response = await fetch(`${API}?page=${page}&count=${count}`);
     if (!response.ok) throw new Error(`HTTP error status: ${response.status}`);
     const data = await response.json();
-    console.log(data); // Убедитесь, что data содержит ожидаемые поля
-    return data; // Возвращаем data напрямую, без обращения к data.data
+    
+    return data;
   } catch (err) {
     console.error('Failed to fetch schools:', err);
   } finally {
@@ -22,7 +22,6 @@ export async function fetchSchools(page, count) {
 
 export const getDataFromAPI = (dataFromApi) => {
   const data = dataFromApi.data
-  console.log('getDataFromAPI', data);
   const itemsSchools = ref([]);
   const currentPage = ref(1);
   const totalPages = ref(10);
@@ -57,7 +56,6 @@ export const getDataFromAPI = (dataFromApi) => {
     totalPages: totalPages.value,
     statuses: statuses.value,
   }
-  console.log("Fetched data:", fetchedData);
   return { fetchedData };
 }
 
