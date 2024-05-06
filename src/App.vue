@@ -1,16 +1,17 @@
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue';
-import DataTable from './components/DataTable.vue';
-import InputSearch from './components/ui/InputSearch.vue';
+import AppTable from './components/AppTable.vue';
+import AppInput from './components/shared/AppInput.vue';
 import abbreviateInstitutionName from './components/utilities/FormatName';
-import AppButton from './components/ui/AppButton.vue';
-import AppDropdown from './components/ui/AppDropdown.vue';
+import AppButton from './components/shared/AppButton.vue';
+import AppDropdown from './components/shared/AppDropdown.vue';
 import formatAddress from './components/utilities/FormatAdress';
-import AppDatePicker from './components/ui/AppDatePicker.vue';
-import AppPagination from './components/ui/AppPagination.vue';
+import AppDatePicker from './components/AppDatePicker/AppDatePicker.vue';
+import AppPagination from './components/shared/AppPagination.vue';
 import formatEducationLevel from './components/utilities/FormatEduLevels';
-import { fetchSchools, getDataFromAPI } from './api/apiService'; 
-import AppError from './components/ui/AppError.vue';
+import { fetchSchools, getDataFromAPI } from './services/ApiService'; 
+import AppError from './components/shared/AppError.vue';
+import AppDay from './components/AppDatePicker/AppDay.vue';
 
 const itemsSchools = ref([]);
 const searchQuery = ref('');
@@ -56,7 +57,7 @@ onMounted(async () => {
   itemsSchools.value = fetchedData.items;
   statuses.value = fetchedData.statuses;
   totalPages.value = fetchedData.totalPages;
-  currentPage.value = 1; // Initialize currentPage to 1
+  currentPage.value = 1; 
 
   watch([currentPage, itemsPerPage], async (newValues) => {
   const page = newValues[0];
@@ -96,7 +97,7 @@ onMounted(async () => {
     <div class="row-full">
       <h1 class="page-title">Таблица учреждений</h1>
       <div class="row">
-        <InputSearch @search="searchQuery = $event" />
+      <AppDay  />
         <AppButton
           @click="downloadSchoolsCSV"
           icon="true"
@@ -106,7 +107,8 @@ onMounted(async () => {
       </div>
     </div>
     <div class="row-full">
-      <AppDatePicker />
+        <AppInput type="search" :icon="true" @search="searchQuery = $event" />
+      <!-- <AppDatePicker /> -->
       <AppDropdown
         :id="`organization-types`"
         :options="statuses"
@@ -124,7 +126,7 @@ onMounted(async () => {
         @update="selectedStatus = $event"
       />
     </div>
-    <DataTable
+    <AppTable
       :data="filteredItemsSchools"
       :columns="gridColumns"
       :filter-key="searchQuery"

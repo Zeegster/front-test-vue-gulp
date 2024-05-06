@@ -36,7 +36,6 @@ const goToPage = (pageNumber) => {
   }
 };
 
-// Adjusted computed property for visible page numbers
 const visiblePageNumbers = computed(() => {
   const startPage = Math.max(2, props.currentPage - 1);
   const endPage = Math.min(props.totalPages - 1, props.currentPage + 1);

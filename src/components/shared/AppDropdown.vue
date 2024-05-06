@@ -15,6 +15,7 @@ const props = defineProps({
     type: String,
     default: 'default',
   },
+  showArrow: { type: Boolean, default: true },
 });
 
 const value = ref();
@@ -31,7 +32,7 @@ const selectOption = (option) => {
 };
 
 const toggleDropdown = (e) => {
-  if (e.target.id === `${props.name}-button-label`) {
+  if (e.target.id === `${props.name}-button` || e.target.id === props.id) {
     dropdownHidden.value = !dropdownHidden.value;
   } else {
     dropdownHidden.value = true;
@@ -62,7 +63,11 @@ watch(value, (newValue) => {
 </script>
 
 <template>
-  <div class="dropdown-wrapper">
+  <div class="dropdown-wrapper"
+  :class="{
+    'dropdown-wrapper--calendar': props.type === 'calendar',
+  }"
+  >
     <label
       for="dropdown"
       class="dropdown-label"
@@ -77,7 +82,7 @@ watch(value, (newValue) => {
       v-click-outside="toggleDropdown"
     >
       <button
-        :id="`${props.name}-button-label`"
+        :id="`${props.name}-button`"
         @click="toggleDropdown($event)"
         type="button"
         aria-haspopup="listbox"
@@ -89,6 +94,7 @@ watch(value, (newValue) => {
       >
         {{ value ? value : props.emptyOptionLabel }}
         <svg
+        v-show="props.showArrow"
           width="24"
           height="24"
           viewBox="0 0 24 24"
@@ -113,7 +119,7 @@ watch(value, (newValue) => {
 
       >
         <li
-          v-if="props.type !== 'number'"
+          v-if="props.type !== 'number' && props.type !== 'calendar'"
           tabindex="0"
           class="dropdown__option"
           :class="{ 'dropdown__option--number': props.type === 'number' }"
@@ -139,7 +145,7 @@ watch(value, (newValue) => {
   </div>
 </template>
 
-<style>
+<style lang="scss" scoped>
 .dropdown-wrapper {
   display: flex;
   align-items: center;
@@ -156,6 +162,21 @@ watch(value, (newValue) => {
   }
   .dropdown {
     width: 100%;
+  }
+  &--calendar {
+    width: fit-content;
+    .dropdown{
+      width: fit-content;
+    }
+    .dropdown__button {
+      border:0;
+      font-weight: 700;
+      background-color: transparent;
+
+      &:hover{
+        background-color: var(--color-white);
+      }
+    }
   }
 }
 .dropdown__trigger {
@@ -208,6 +229,7 @@ watch(value, (newValue) => {
   border-radius: 0.62rem;
   gap: 0.62rem;
   cursor: pointer;
+  transition: all 0.2s;
   &[aria-disabled='true'] {
     opacity: 0.5;
   }
