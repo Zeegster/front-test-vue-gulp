@@ -38,9 +38,7 @@ const filteredData = computed(() => {
   if (filterKey) {
     filterKey = filterKey.toLowerCase();
     data = data.filter((row) => {
-      
       return Object.values(row).some((value) => {
-        
         if (Array.isArray(value)) {
           return value.some((item) => {
             return String(item).toLowerCase().indexOf(filterKey) > -1;
@@ -79,20 +77,25 @@ function capitalize(str) {
 </script>
 
 <template>
-  <table 
-  class="table-base"
-  v-if="filteredData.length">
+  <table
+    class="table-base"
+    v-if="filteredData.length"
+  >
     <thead>
       <tr>
         <th
           v-for="key in columns"
           @click="sortBy(key)"
-          :class="{ active: sortKey.value === key, sorting: sortOrders[key] !== 1 }"
-        ><span>
-         <h2>
-          {{ capitalize(key) }}
-         </h2> 
-          
+          :class="{
+            active: sortKey.value === key,
+            sorting: sortOrders[key] !== 1,
+          }"
+        >
+          <span>
+            <h2>
+              {{ capitalize(key) }}
+            </h2>
+
             <svg
               width="17"
               height="16"
@@ -106,7 +109,11 @@ function capitalize(str) {
                     ? 'M12.6666 6L8.66309 2L4.66663 6'
                     : 'M12.6666 6L8.66309 2L4.66663 6'
                 "
-                :stroke="sortOrders[key] > 0 ? 'var(--color-gray-d3)' : 'var(--color-base-black)'"
+                :stroke="
+                  sortOrders[key] > 0
+                    ? 'var(--color-gray-d3)'
+                    : 'var(--color-base-black)'
+                "
                 stroke-width="1.5"
                 stroke-miterlimit="10"
               />
@@ -116,7 +123,11 @@ function capitalize(str) {
                     ? 'M12.6666 10L8.67016 14L4.66663 10'
                     : 'M12.6666 10L8.67016 14L4.66663 10'
                 "
-                :stroke="sortOrders[key] > 0 ? 'var(--color-base-black)' : 'var(--color-gray-d3)'"
+                :stroke="
+                  sortOrders[key] > 0
+                    ? 'var(--color-base-black)'
+                    : 'var(--color-gray-d3)'
+                "
                 stroke-width="1.5"
                 stroke-miterlimit="10"
               />
@@ -127,12 +138,11 @@ function capitalize(str) {
     </thead>
     <tbody>
       <tr v-for="entry in filteredData">
-        <td>{{ entry.region }}</td>
+        <td class="region">{{ entry.region }}</td>
         <td>{{ entry.name }}</td>
         <td>{{ entry.address }}</td>
-        <td >
+        <td>
           <div class="tag-container">
-
             <span
               class="tag"
               v-for="entries in entry.educationLevel"
@@ -153,10 +163,12 @@ function capitalize(str) {
 </template>
 
 <style lang="scss">
-
 table.table-base {
   border-spacing: 0;
 
+  background-color: #fff;
+
+    table-layout: fixed;
   tr,
   th,
   td,
@@ -165,37 +177,47 @@ table.table-base {
     padding: 0;
     border-spacing: 0;
   }
-  
-  table {
-    background-color: #fff;
-  }
-  
+
+
   th {
     background-color: var(--color-gray-d1);
     color: rgba(255, 255, 255, 0.66);
     cursor: pointer;
     user-select: none;
-    h2{
-  
+
+    height: 56px;
+    &:nth-of-type(1),
+    &:nth-of-type(2),
+    &:nth-of-type(3) {
+      width: min(30vw, 27.5rem);
+    }
+    &:nth-of-type(4) {
+      width: min(10vw, 16.56rem);
+    }
+    h2 {
+      text-wrap: nowrap;
       font-weight: 700;
       font-size: 1rem;
       line-height: 130%;
       color: var(--color-gray-d4);
     }
-    span{
+    span {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      
-      svg{
+      gap: 0.62rem;
+
+      svg {
         margin-top: auto;
         margin-bottom: auto;
       }
     }
   }
-  
+
   tr {
+    table-layout: fixed;
     background-color: #fff;
+    width: 100%;
   }
   tr:hover {
     background-color: var(--color-base-white);
@@ -206,14 +228,26 @@ table.table-base {
     font-size: 0.88rem;
     line-height: 130%;
     color: var(--color-base-black);
+    &:nth-of-type(1) {
+
+      text-wrap: nowrap;
+    }
+    &:nth-of-type(1),
+    &:nth-of-type(2),
+    &:nth-of-type(3) {
+      width: min(30vw, 27.5rem);
+    }
+    &:nth-of-type(4) {
+      width: min(10vw, 16.56rem);
+    }
   }
-  
+
   th,
   td {
     padding: 1rem;
     text-align: left;
   }
-  
+
   th.active {
     color: var(--color-base-black);
   }
@@ -223,7 +257,7 @@ table.table-base {
   th.active .arrow {
     opacity: 1;
   }
-  
+
   .arrow {
     display: inline-block;
     vertical-align: middle;
@@ -232,19 +266,19 @@ table.table-base {
     margin-left: 5px;
     opacity: 0.66;
   }
-  
+
   .arrow.asc {
     border-left: 4px solid transparent;
     border-right: 4px solid transparent;
     border-bottom: 4px solid var(--color-gray-d3);
   }
-  
+
   .arrow.dsc {
     border-left: 4px solid transparent;
     border-right: 4px solid transparent;
     border-top: 4px solid var(--color-base-black);
   }
-  
+
   .tag-container {
     display: flex;
     flex-wrap: wrap;
@@ -258,7 +292,6 @@ table.table-base {
       padding: 0.25rem 0.38rem;
     }
   }
-  
 }
 .loading {
   display: flex;

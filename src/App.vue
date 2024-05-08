@@ -2,16 +2,14 @@
 import { ref, onMounted, watch, computed } from 'vue';
 import AppTable from './components/AppTable.vue';
 import AppInput from './components/shared/AppInput.vue';
-import abbreviateInstitutionName from './components/utilities/FormatName';
 import AppButton from './components/shared/AppButton.vue';
 import AppDropdown from './components/shared/AppDropdown.vue';
-import formatAddress from './components/utilities/FormatAdress';
-import AppDatePicker from './components/AppDatePicker/AppDatePicker.vue';
+
+// import AppDatePicker from './components/AppDatePicker/AppDatePicker.vue';
 import AppPagination from './components/shared/AppPagination.vue';
-import formatEducationLevel from './components/utilities/FormatEduLevels';
 import { fetchSchools, getDataFromAPI } from './services/ApiService'; 
 import AppError from './components/shared/AppError.vue';
-import AppDay from './components/AppDatePicker/AppDay.vue';
+import AppDatePicker from './components/AppDatePicker/AppDatePicker.vue';
 
 const itemsSchools = ref([]);
 const searchQuery = ref('');
@@ -97,8 +95,8 @@ onMounted(async () => {
     <div class="row-full">
       <h1 class="page-title">Таблица учреждений</h1>
       <div class="row">
-      <AppDay  />
-        <AppButton
+        <AppDatePicker />
+      <AppButton
           @click="downloadSchoolsCSV"
           icon="true"
           text="Скачать"
@@ -108,7 +106,6 @@ onMounted(async () => {
     </div>
     <div class="row-full">
         <AppInput type="search" :icon="true" @search="searchQuery = $event" />
-      <!-- <AppDatePicker /> -->
       <AppDropdown
         :id="`organization-types`"
         :options="statuses"
@@ -159,10 +156,12 @@ section.container {
   align-items: flex-start;
   justify-content: center;
   flex-direction: column;
+  margin: auto;
   gap: 1.5rem;
   border-radius: 1rem;
   padding: 1.5rem;
   background-color: #fff;
+  width: min( 1632px, 100% );
 }
 
 .items-per-page {

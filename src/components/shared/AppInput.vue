@@ -38,12 +38,12 @@ const handleInput = (event) => {
   emit('update:modelValue', event.target.value);
 };
 
-const handleFocus = () => {
-  emit('focus');
+const handleFocus = (event) => {
+  emit('focus',event);
 };
 
-const handleBlur = () => {
-  emit('blur');
+const handleBlur = (event) => {
+  emit('blur',event);
 };
 </script>
 
@@ -61,6 +61,7 @@ const handleBlur = () => {
     <span
       v-if="icon"
       :class="`icon ${type}`"
+      @click="iconEvent"
     
     >
       <svg
@@ -110,7 +111,7 @@ const handleBlur = () => {
  
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 form#search {
   margin: 0;
 }
@@ -118,6 +119,7 @@ input {
   border: 1px solid var(--color-gray-d2);
   border-radius: 0.62rem;
   padding: 1rem 1.5rem;
+  width: 100%;
   &[placeholder] {
     font-weight: 400;
     font-size: 1rem;
@@ -129,6 +131,10 @@ input {
 .input-wrapper {
   position: relative;
   display: inline-block;
+  width: 100%;
+  &.datepicker {
+    width: 320px;
+  }
 }
 
 .input-wrapper .icon {

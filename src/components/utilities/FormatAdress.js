@@ -5,7 +5,6 @@ export default function formatAddress(address) {
 
   address = address.replace(/^,\s*/, '');
 
-  // Search for postal code
   const postalCodeMatch = address.match(/(\d{6})(?=[,\s.\d]|$)/);
   const postalCode = postalCodeMatch ? postalCodeMatch[1] : '';
 

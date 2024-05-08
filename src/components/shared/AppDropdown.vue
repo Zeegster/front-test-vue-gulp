@@ -34,6 +34,8 @@ const selectOption = (option) => {
 const toggleDropdown = (e) => {
   if (e.target.id === `${props.name}-button` || e.target.id === props.id) {
     dropdownHidden.value = !dropdownHidden.value;
+    if (!dropdownHidden.value) { 
+    }
   } else {
     dropdownHidden.value = true;
   }
@@ -51,11 +53,17 @@ const handleKeydown = (e) => {
   }
 };
 
+
+
+
+
+
 onMounted(() => {
   if (props.type === 'number') {
     value.value = props.options[0];
   }
 });
+
 
 watch(value, (newValue) => {
   emit('update', newValue);
@@ -65,7 +73,7 @@ watch(value, (newValue) => {
 <template>
   <div class="dropdown-wrapper"
   :class="{
-    'dropdown-wrapper--calendar': props.type === 'calendar',
+    'dropdown-wrapper--datepicker': props.type === 'datepicker',
   }"
   >
     <label
@@ -77,7 +85,7 @@ watch(value, (newValue) => {
     <div
       id="dropdown"
       class="dropdown"
-      :value="value"
+      :value="props.type !== 'datepicker' && value ? value : props.emptyOptionLabel"
       ref="dropdown"
       v-click-outside="toggleDropdown"
     >
@@ -92,7 +100,7 @@ watch(value, (newValue) => {
           'dropdown__button--number': props.type === 'number',
         }"
       >
-        {{ value ? value : props.emptyOptionLabel }}
+        {{ props.type !== 'datepicker' && value ? value : props.emptyOptionLabel}}
         <svg
         v-show="props.showArrow"
           width="24"
@@ -119,7 +127,7 @@ watch(value, (newValue) => {
 
       >
         <li
-          v-if="props.type !== 'number' && props.type !== 'calendar'"
+          v-if="props.type !== 'number' && props.type !== 'datepicker'"
           tabindex="0"
           class="dropdown__option"
           :class="{ 'dropdown__option--number': props.type === 'number' }"
@@ -163,7 +171,7 @@ watch(value, (newValue) => {
   .dropdown {
     width: 100%;
   }
-  &--calendar {
+  &--datepicker {
     width: fit-content;
     .dropdown{
       width: fit-content;

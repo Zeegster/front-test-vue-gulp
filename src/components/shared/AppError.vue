@@ -1,8 +1,4 @@
 <script setup>
-const props = defineProps({
-  onScreen: Boolean
-})
-props.onScreen ? document.body.style.overflow = 'hidden' : document.body.style.overflow = 'auto';
 
 </script>
 

@@ -10,8 +10,7 @@ const gulp = require('gulp'),
  browserSync = require('browser-sync').create(),
  sass = require('gulp-sass')(require('sass')),
  sassGlob = require('gulp-sass-glob'),
- sourceMaps = require('gulp-sourcemaps')
-;
+ sourceMaps = require('gulp-sourcemaps');
 
 
 gulp.task('clean:dev', function (done) {
