@@ -2,8 +2,9 @@ import { ref } from 'vue';
 import abbreviateInstitutionName from '../components/utilities/FormatName';
 import formatEducationLevel from '../components/utilities/FormatEduLevels';
 import formatAddress from '../components/utilities/FormatAdress';
-
 const API = 'https://schooldb.skillline.ru/api/schools';
+
+
 export async function fetchSchools(page, count) {
   const loading = ref(true);
 
