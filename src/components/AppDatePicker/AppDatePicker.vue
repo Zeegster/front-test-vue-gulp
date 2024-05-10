@@ -37,7 +37,6 @@ const  toggleDatePicker = (e) => {
   if (!e) {
     return;
   }
-  console.log('e', e);
   if (e.target.classList.contains('datepicker') || e.target.id === 'datepicker-reset'|| e.target.id === 'datepicker-submit') {
     showDatePicker.value = !showDatePicker.value;
     

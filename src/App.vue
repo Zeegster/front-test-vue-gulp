@@ -180,6 +180,7 @@ section.container {
   justify-content: space-between;
   width: 100%;
   gap: 1rem;
+
 }
 .select-page {
   border: 1px solid var(--color-gray-d2);
