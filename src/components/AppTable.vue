@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue';
+import AppCheckbox from './shared/AppCheckbox.vue';
 
 const props = defineProps({
   data: Array,
@@ -28,9 +29,15 @@ function updateSortOrder(key) {
   }
 }
 
-function sortBy(key) {
-  updateSortOrder(key);
-  sortKey.value = key;
+
+
+
+function sortBy(key, event) {
+  if(event.target.tagName !== 'INPUT' ){
+    
+    updateSortOrder(key);
+    sortKey.value = key;
+  }
 }
 
 const filteredData = computed(() => {
@@ -77,82 +84,89 @@ function capitalize(str) {
 </script>
 
 <template>
-  <table
-    class="table-base"
-    v-if="filteredData.length"
-  >
-    <thead>
-      <tr>
-        <th
-          v-for="key in columns"
-          @click="sortBy(key)"
-          :class="{
-            active: sortKey.value === key,
-            sorting: sortOrders[key] !== 1,
-          }"
-        >
-          <span>
-            <h2>
-              {{ capitalize(key) }}
-            </h2>
+  <div class="table-wrapper">
 
-            <svg
-              width="17"
-              height="16"
-              viewBox="0 0 17 16"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                :d="
-                  sortOrders[key] > 0
-                    ? 'M12.6666 6L8.66309 2L4.66663 6'
-                    : 'M12.6666 6L8.66309 2L4.66663 6'
-                "
-                :stroke="
-                  sortOrders[key] > 0
-                    ? 'var(--color-gray-d3)'
-                    : 'var(--color-base-black)'
-                "
-                stroke-width="1.5"
-                stroke-miterlimit="10"
-              />
-              <path
-                :d="
-                  sortOrders[key] > 0
-                    ? 'M12.6666 10L8.67016 14L4.66663 10'
-                    : 'M12.6666 10L8.67016 14L4.66663 10'
-                "
-                :stroke="
-                  sortOrders[key] > 0
-                    ? 'var(--color-base-black)'
-                    : 'var(--color-gray-d3)'
-                "
-                stroke-width="1.5"
-                stroke-miterlimit="10"
-              />
-            </svg>
-          </span>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="entry in filteredData">
-        <td class="region">{{ entry.region }}</td>
-        <td>{{ entry.name }}</td>
-        <td>{{ entry.address }}</td>
-        <td>
-          <div class="tag-container">
-            <span
-              class="tag"
-              v-for="entries in entry.educationLevel"
-              >{{ entries }}</span
-            >
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+    <table
+      class="table-base"
+      v-if="filteredData.length"
+    >
+      <thead>
+        <tr>
+          <th
+            v-for="key in columns"
+           
+            :class="{
+              region: key === 'Регионы',
+              active: sortKey.value === key,
+              sorting: sortOrders[key] !== 1,
+            }"
+          >
+          <AppCheckbox v-if="key === 'Регионы'" :name="key" >
+           
+          </AppCheckbox> 
+          <span @click="sortBy(key,$event)">
+              <h2  >
+                {{ capitalize(key) }}
+              </h2>
+  
+              <svg
+                width="17"
+                height="16"
+                viewBox="0 0 17 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  :d="
+                    sortOrders[key] > 0
+                      ? 'M12.6666 6L8.66309 2L4.66663 6'
+                      : 'M12.6666 6L8.66309 2L4.66663 6'
+                  "
+                  :stroke="
+                    sortOrders[key] > 0
+                      ? 'var(--color-gray-d3)'
+                      : 'var(--color-base-black)'
+                  "
+                  stroke-width="1.5"
+                  stroke-miterlimit="10"
+                />
+                <path
+                  :d="
+                    sortOrders[key] > 0
+                      ? 'M12.6666 10L8.67016 14L4.66663 10'
+                      : 'M12.6666 10L8.67016 14L4.66663 10'
+                  "
+                  :stroke="
+                    sortOrders[key] > 0
+                      ? 'var(--color-base-black)'
+                      : 'var(--color-gray-d3)'
+                  "
+                  stroke-width="1.5"
+                  stroke-miterlimit="10"
+                />
+              </svg>
+            </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="entry in filteredData">
+          <td >  <AppCheckbox :name="entry.region" :checked="true" > {{ entry.region }}</AppCheckbox>  </td>
+          <td>{{ entry.name }}</td>
+          <td>{{ entry.address }}</td>
+          <td>
+            <div class="tag-container">
+              <span
+                class="tag"
+                v-for="entries in entry.educationLevel"
+                >{{ entries }}</span
+              >
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   <p
     class="loading"
     v-if="!data.length"
@@ -163,12 +177,19 @@ function capitalize(str) {
 </template>
 
 <style lang="scss">
+.table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+}
 table.table-base {
   border-spacing: 0;
 
   background-color: #fff;
 
     table-layout: fixed;
+    width: 100%;
+
+  overflow: scroll;
   tr,
   th,
   td,
@@ -189,10 +210,15 @@ table.table-base {
     &:nth-of-type(1),
     &:nth-of-type(2),
     &:nth-of-type(3) {
-      width: min(30vw, 27.5rem);
+      width: min(100%, 27.5rem);
     }
     &:nth-of-type(4) {
-      width: min(10vw, 16.56rem);
+      width: min(100%, 16.56rem);
+    }
+    &.region{
+      display: flex;
+      gap: 0.62rem;
+      align-items: center;
     }
     h2 {
       text-wrap: nowrap;
@@ -200,16 +226,19 @@ table.table-base {
       font-size: 1rem;
       line-height: 130%;
       color: var(--color-gray-d4);
+      margin: 0;
     }
     span {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      width: 100%;
       gap: 0.62rem;
 
       svg {
         margin-top: auto;
         margin-bottom: auto;
+        margin-left: auto;
       }
     }
   }
@@ -218,6 +247,7 @@ table.table-base {
     table-layout: fixed;
     background-color: #fff;
     width: 100%;
+    
   }
   tr:hover {
     background-color: var(--color-base-white);
@@ -235,10 +265,10 @@ table.table-base {
     &:nth-of-type(1),
     &:nth-of-type(2),
     &:nth-of-type(3) {
-      width: min(30vw, 27.5rem);
+      width: min(100%, 27.5rem);
     }
     &:nth-of-type(4) {
-      width: min(10vw, 16.56rem);
+      width: min(100%, 16.56rem);
     }
   }
 
