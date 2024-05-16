@@ -1,4 +1,6 @@
-# Front Test Vue 3 + Gulp + Webpack
+# Front Test Vue 3 + Gulp + Webpack - окружение разработчика 
 
-Чтобы скомпилировать и установить зависимости, используйте `npm i` или `yarn install`, а затем скомпилируйте с помощью `gulp`.
+Тестовое задания на рол Frontend разработчика в компанию Skillline - https://skillline.ru/.
+Разработка таблицы для визуализации данных из API.
 
+Демонстрация доступна по ссылке https://zeegster.github.io/front-test-build/
