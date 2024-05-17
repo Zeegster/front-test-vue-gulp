@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import AppCheckbox from './shared/AppCheckbox.vue';
+import AppSwitcher from './shared/AppSwitcher.vue';
 
 const props = defineProps({
   data: Array,
@@ -10,6 +11,7 @@ const props = defineProps({
 
 const sortKey = ref('');
 const sortOrders = ref(props.columns.reduce((o, key) => ((o[key] = 1), o), {}));
+const version = ref(true);
 
 function getDataKey(columnKey) {
   const keyMap = {
@@ -85,10 +87,11 @@ function capitalize(str) {
 
 <template>
   <div class="table-wrapper">
-
+    
     <table
-      class="table-base"
-      v-if="filteredData.length"
+      :class="'table-base'"
+      v-show="filteredData.length"
+      
     >
       <thead>
         <tr>
@@ -151,7 +154,12 @@ function capitalize(str) {
       </thead>
       <tbody>
         <tr v-for="entry in filteredData">
-          <td >  <AppCheckbox :name="entry.region" :checked="true" > {{ entry.region }}</AppCheckbox>  </td>
+          <td v-if="Array.isArray(entry.region)" > <div class="region">
+            <AppCheckbox :name="entry.region" :checked="true" > </AppCheckbox>  {{ entry.region }}
+          </div> </td>
+          <td > <div class="region">
+            <AppCheckbox :name="entry.region" :checked="true" > </AppCheckbox>  {{ entry.region }}
+          </div> </td>
           <td>{{ entry.name }}</td>
           <td>{{ entry.address }}</td>
           <td>
@@ -247,6 +255,13 @@ table.table-base {
     table-layout: fixed;
     background-color: #fff;
     width: 100%;
+    td{
+      .region{
+        display: flex;
+      gap: 0.62rem;
+      align-items: center;
+      height: 4rem;    
+    }}
     
   }
   tr:hover {

@@ -10,6 +10,7 @@ import AppPagination from './components/shared/AppPagination.vue';
 import { fetchSchools, getDataFromAPI } from './services/ApiService'; 
 import AppError from './components/shared/AppError.vue';
 import AppDatePicker from './components/AppDatePicker/AppDatePicker.vue';
+import AppSwitcher from './components/shared/AppSwitcher.vue';
 
 const itemsSchools = ref([]);
 const searchQuery = ref('');
@@ -21,6 +22,7 @@ const statuses = ref([]);
 const selectedStatus = ref([]);
 const gridColumns = ['Регионы', 'Название', 'Адрес', 'Уровень образования'];
 const isError = ref(false);
+const version = ref(true);
 
 async function downloadSchoolsCSV() {
   try {
@@ -105,6 +107,9 @@ onMounted(async () => {
       </div>
     </div>
     <div class="row-full">
+      <AppSwitcher @update="version = $event">
+      Версия таблицы: {{ version }}
+    </AppSwitcher>
         <AppInput type="search" :icon="true" @search="searchQuery = $event" />
       <AppDropdown
         :id="`organization-types`"
@@ -124,6 +129,13 @@ onMounted(async () => {
       />
     </div>
     <AppTable
+      v-if="version"
+      :data="filteredItemsSchools"
+      :columns="gridColumns"
+      :filter-key="searchQuery"
+    />
+    <AppTable
+      v-if="!version"
       :data="filteredItemsSchools"
       :columns="gridColumns"
       :filter-key="searchQuery"

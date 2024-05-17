@@ -1,7 +1,7 @@
 import { ref } from 'vue';
-import abbreviateInstitutionName from '../components/utilities/FormatName';
-import formatEducationLevel from '../components/utilities/FormatEduLevels';
-import formatAddress from '../components/utilities/FormatAdress';
+import abbreviateInstitutionName from '../components/utilities/FormatName.js';
+import formatEducationLevel from '../components/utilities/FormatEduLevels.js';
+import formatAddress from '../components/utilities/FormatAdress.js';
 const API = 'https://schooldb.skillline.ru/api/schools';
 
 

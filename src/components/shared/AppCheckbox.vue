@@ -1,6 +1,6 @@
 
 <script setup>
-import { defineProps, defineEmits, ref } from 'vue';
+import { ref } from 'vue';
 
 const props = defineProps({
   name: { type: String, default: 'checkbox' },
@@ -9,8 +9,10 @@ const props = defineProps({
 const checked = ref(false);
 const emit = defineEmits(['update:checked']);
 
-function toggleCheckbox() {
-  checked.value = !checked.value;
+function toggleCheckbox(event) {
+  // do nothing when clicked on slot
+  
+checked.value = !checked.value;
   emit('update:checked', checked.value);
 }
 </script>
@@ -22,7 +24,7 @@ function toggleCheckbox() {
       :id="name"
       :name="name"
       :checked="checked"
-      @change="toggleCheckbox"
+      @change="toggleCheckbox($event)"
       class="custom-checkbox__input"
       :aria-checked="checked"
       :aria-label="name"
