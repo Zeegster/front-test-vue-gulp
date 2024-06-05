@@ -109,6 +109,7 @@ export const browserSyncTask = () => {
       baseDir: './build',
     },
     notify: false,
+    open: false
   });
 };
 
